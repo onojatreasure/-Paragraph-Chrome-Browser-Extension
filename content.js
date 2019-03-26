@@ -1,15 +1,14 @@
 console.log("Chrome Extension go");
 
+window.addEventListener('mouseup', wordSelected);
 
-chrome.runtime.onMessage.addListener(gotMessage);
-
-function gotMessage(message, sender, sendResponse){
-    console.log(message);
-
-        let paragraphs = document.getElementsByTagName('p');
-        for(elt of paragraphs){
-            //elt.style['background-color'] = getRandomColor();
-            elt.innerHTML = message.txt;
-        }
-    
-} 
+function wordSelected() {
+  let selectedText = window.getSelection().toString().trim();
+  console.log(selectedText);
+  if (selectedText.length > 0) {
+    let message = {
+      text: selectedText
+    };
+    chrome.runtime.sendMessage(message);
+  }
+}

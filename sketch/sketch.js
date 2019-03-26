@@ -1,29 +1,25 @@
 function setup() {
   noCanvas();
-  let userinput = select('#userinput');
-  userinput.input(changeText);
 
-  function changeText(){
+  let bgpage = chrome.extension.getBackgroundPage();
+  let word = bgpage.word.trim();
 
-    let params = {
-      active: true,
-      currentWindow: true
-    }
+  let url = `http://api.wordnik.com:80/v4/word.json/
+  ${word}
+  /definitions?limit=1
+  &includeRelated=false
+  &sourceDictionaries=all
+  &useCanonical=false
+  &includeTags=false
+  &api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5
+  `
+  url = url.replace(/\s+/g, '');
+  loadJSON(url, gotData);
 
-    chrome.tabs.query(params, gotTabs);
-
-    function gotTabs(tabs){
-     
-      console.log(tabs);
-        //send a message to the content script
-      let message = userinput.value();
-      let msg = {
-        txt: userinput.value()
-      }
-      chrome.tabs.sendMessage(tabs[0].id, msg);
-    }
-    
-
+  function gotData(data) {
+    createP(data[0].text).style('font-size', '48pt');
   }
-}
 
+
+  //createP(word);
+}

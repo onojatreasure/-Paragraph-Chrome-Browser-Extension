@@ -1,10 +1,10 @@
-console.log('Background running');
+console.log('background running');
 
-chrome.browserAction.onClicked.addListener(buttonClicked);
+chrome.runtime.onMessage.addListener(receiver);
 
-function buttonClicked(tab){
-    let msg = {
-        txt: "hello"
-    }
-    chrome.tabs.sendMessage(tab.id, msg);
+window.word = "Veleom";
+
+function receiver(request, sender, sendResponse) {
+  console.log(request);
+  word = request.text;
 }
